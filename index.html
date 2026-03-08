@@ -3,226 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Global City Time Matrix 2026</title>
+    <title>Earth Clock Pro Max - 2026</title>
     
     <style>
-        /* --- PHẦN 1: NỀN TẢNG UI CAO CẤP & FONT HỆ THỐNG --- */
+        /* --- PHẦN 1: FONT HỆ THỐNG & BIẾN GIAO DIỆN --- */
         :root {
-            --sys-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --main-cyan: #00d2ff;
-            --glass-bg: rgba(10, 10, 10, 0.96);
-            --safe-h: 100dvh;
+            --phone-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --neon-cyan: #00d2ff;
+            --glass: rgba(0, 0, 0, 0.75);
+            --app-height: 100dvh;
         }
 
         * { 
             box-sizing: border-box; margin: 0; padding: 0; 
-            font-family: var(--sys-font);
+            font-family: var(--phone-font);
             -webkit-font-smoothing: antialiased;
             user-select: none;
         }
 
+        /* --- PHẦN 2: HÌNH NỀN TRÁI ĐẤT (STUNNING EARTH BACKGROUND) --- */
         html, body {
-            width: 100vw; height: var(--safe-h);
+            width: 100vw; height: var(--app-height);
             overflow: hidden; background: #000;
             position: fixed; display: flex;
             justify-content: center; align-items: center;
         }
 
-        /* --- PHẦN 2: KHUNG VẬT LÝ APP (CHỐNG TRÀN) --- */
-        .app-container {
+        .earth-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* Sử dụng ảnh Trái Đất từ không gian làm hình nền chính */
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            filter: brightness(0.6); /* Làm tối nền để nổi bật chữ */
+        }
+
+        /* --- PHẦN 3: KHUNG KÍNH MỜ (GLASSMORPHISM) --- */
+        .app-core {
             position: relative;
-            width: 95vw; max-width: 420px;
-            height: calc(var(--safe-h) - 110px);
-            max-height: 800px;
-            background: var(--glass-bg);
-            border-radius: 52px;
-            border: 1px solid rgba(255,255,255,0.1);
+            width: 92vw; max-width: 400px;
+            height: calc(var(--app-height) - 120px);
+            max-height: 750px;
+            background: var(--glass);
+            backdrop-filter: blur(25px); /* Hiệu ứng kính mờ xịn sò */
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 45px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             display: flex; flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 50px 150px rgba(0,0,0,1);
-            padding-top: env(safe-area-inset-top);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
 
-        /* Thanh điều hướng Header */
-        .nav-header { padding: 30px 25px 12px; flex-shrink: 0; }
-        .tab-switcher {
-            display: flex; background: rgba(255,255,255,0.04);
-            border-radius: 25px; padding: 5px; gap: 5px;
+        /* Navigation Tabs */
+        .nav-tabs { padding: 30px 20px 10px; flex-shrink: 0; }
+        .tab-wrapper {
+            display: flex; background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px; padding: 4px; gap: 4px;
         }
-        .tab-item {
-            flex: 1; padding: 14px 0; border: none; background: transparent;
-            color: #555; font-weight: 900; font-size: 11px;
-            text-transform: uppercase; letter-spacing: 1.2px;
-            transition: all 0.4s ease;
+        .tab {
+            flex: 1; padding: 12px 0; border: none; background: transparent;
+            color: #666; font-weight: 800; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
         }
-        .tab-item.active {
-            background: var(--main-cyan); color: #000;
-            border-radius: 20px; box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4);
-        }
-
-        /* Viewport chính */
-        .view-frame { flex: 1; overflow: hidden; position: relative; }
-        .content-slider {
-            display: flex; width: 300%; height: 100%;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .page-view {
-            width: 33.3333%; height: 100%;
-            padding: 10px 25px; display: flex; flex-direction: column;
+        .tab.active {
+            background: var(--neon-cyan); color: #000;
+            border-radius: 16px; box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
         }
 
-        /* --- PHẦN 3: BỘ CHỌN THÀNH PHỐ TOÀN CẦU (FULL CITY MATRIX) --- */
-        .city-selector {
-            width: 100%; padding: 18px; background: #181818;
-            color: #fff; border: 1px solid #333; border-radius: 22px;
-            font-size: 13px; margin-bottom: 25px; outline: none;
+        /* Timezone Dropdown - ĐÃ FIX */
+        .selector-container { padding: 10px 25px; }
+        .tz-select {
+            width: 100%; padding: 16px; background: rgba(255,255,255,0.05);
+            color: #fff; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; font-size: 13.5px; outline: none;
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat; background-position: right 18px center;
+            background-repeat: no-repeat; background-position: right 15px center;
         }
 
-        /* Giao diện đồng hồ */
-        .monitor {
+        /* Main Clock Area */
+        .main-display {
             flex: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
         }
-        .time-display {
-            font-size: 4.8rem; font-weight: 950; color: #fff;
-            line-height: 0.85; margin-bottom: 20px;
-            letter-spacing: -3px; font-variant-numeric: tabular-nums;
+        .time-txt {
+            font-size: 4.5rem; font-weight: 900; color: #fff;
+            line-height: 0.9; margin-bottom: 15px;
+            letter-spacing: -2px; font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
-        .date-display { font-size: 1.3rem; color: #777; font-weight: 650; }
-        .lunar-tag {
-            margin-top: 35px; background: rgba(0, 210, 255, 0.08);
-            border: 1px solid rgba(0, 210, 255, 0.15);
-            color: var(--main-cyan); padding: 10px 30px;
-            border-radius: 35px; font-weight: 800; font-size: 1rem;
+        .date-txt { font-size: 1.2rem; color: #aaa; font-weight: 600; }
+        .lunar-chip {
+            margin-top: 30px; background: rgba(0, 210, 255, 0.1);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            color: var(--neon-cyan); padding: 8px 25px;
+            border-radius: 30px; font-weight: 700; font-size: 0.9rem;
         }
 
-        /* Footer */
-        .branding {
-            padding: 25px; text-align: center; font-size: 10px;
-            color: #333; text-transform: uppercase; letter-spacing: 2.5px;
-            font-weight: 900; flex-shrink: 0;
+        /* Footer Info */
+        .footer-info {
+            padding: 20px; text-align: center; font-size: 10px;
+            color: #444; text-transform: uppercase; letter-spacing: 2px;
+            font-weight: 800; border-top: 1px solid rgba(255,255,255,0.03);
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header class="nav-header">
-        <div class="tab-switcher">
-            <button class="tab-item active" onclick="move(0)">Đồng Hồ</button>
-            <button class="tab-item" onclick="move(1)">Bấm Giờ</button>
-            <button class="tab-item" onclick="move(2)">Hẹn Giờ</button>
+<div class="earth-bg"></div>
+
+<div class="app-core">
+    <header class="nav-tabs">
+        <div class="tab-wrapper">
+            <button class="tab active">Đồng Hồ</button>
+            <button class="tab">Bấm Giờ</button>
+            <button class="tab">Hẹn Giờ</button>
         </div>
     </header>
 
-    <main class="view-frame">
-        <div class="content-slider" id="masterSlider">
-            <section class="page-view">
-                <select class="city-selector" id="cityPicker">
-                    <optgroup label="Thái Bình Dương (UTC-12 đến UTC-9)">
-                        <option value="Etc/GMT+12">UTC-12: Baker, Howland Island</option>
-                        <option value="Pacific/Niue">UTC-11: Niue, American Samoa</option>
-                        <option value="Pacific/Honolulu">UTC-10: Hawaii, Papeete</option>
-                        <option value="Pacific/Marquesas">UTC-09:30: Marquesas Is.</option>
-                        <option value="America/Anchorage">UTC-09: Alaska, Fairbanks</option>
-                    </optgroup>
-                    <optgroup label="Bắc Mỹ & Nam Mỹ (UTC-8 đến UTC-3)">
-                        <option value="America/Los_Angeles">UTC-08: LA, Vancouver, Tijuana</option>
-                        <option value="America/Denver">UTC-07: Denver, Phoenix, Calgary</option>
-                        <option value="America/Chicago">UTC-06: Chicago, Mexico City</option>
-                        <option value="America/New_York">UTC-05: NY, Toronto, Miami, Lima</option>
-                        <option value="America/Caracas">UTC-04: Caracas, Santiago, La Paz</option>
-                        <option value="America/St_Johns">UTC-03:30: Newfoundland</option>
-                        <option value="America/Sao_Paulo">UTC-03: Sao Paulo, Buenos Aires</option>
-                        <option value="Atlantic/South_Georgia">UTC-02: South Georgia (Khắc phục)</option>
-                        <option value="Atlantic/Azores">UTC-01: Azores, Cape Verde</option>
-                    </optgroup>
-                    <optgroup label="Châu Âu & Châu Phi (UTC+0 đến UTC+3)">
-                        <option value="UTC">UTC+00: London, Lisbon, Casablanca</option>
-                        <option value="Europe/Paris">UTC+01: Paris, Berlin, Rome, Lagos</option>
-                        <option value="Africa/Cairo">UTC+02: Cairo, Johannesburg, Kyiv</option>
-                        <option value="Europe/Moscow">UTC+03: Moscow, Istanbul, Riyadh</option>
-                        <option value="Asia/Tehran">UTC+03:30: Tehran (Iran)</option>
-                    </optgroup>
-                    <optgroup label="Trung Á & Nam Á (UTC+4 đến UTC+6)">
-                        <option value="Asia/Dubai">UTC+04: Dubai, Baku, Mauritius</option>
-                        <option value="Asia/Kabul">UTC+04:30: Kabul (Afghanistan)</option>
-                        <option value="Asia/Karachi">UTC+05: Karachi, Tashkent, Male</option>
-                        <option value="Asia/Kolkata">UTC+05:30: Mumbai, Delhi, Colombo</option>
-                        <option value="Asia/Kathmandu">UTC+05:45: Kathmandu (Nepal)</option>
-                        <option value="Asia/Dhaka">UTC+06: Dhaka, Almaty, Thimphu</option>
-                        <option value="Asia/Yangon">UTC+06:30: Yangon (Myanmar)</option>
-                    </optgroup>
-                    <optgroup label="Đông Nam Á & Đông Á (UTC+7 đến UTC+9)">
-                        <option value="Asia/Ho_Chi_Minh" selected>UTC+07: Hà Nội, TP.HCM, Bangkok, Jakarta</option>
-                        <option value="Asia/Singapore">UTC+08: Singapore, Bắc Kinh, Manila, HK</option>
-                        <option value="Asia/Tokyo">UTC+09: Tokyo, Seoul, Pyongyang</option>
-                        <option value="Australia/Adelaide">UTC+09:30: Adelaide, Darwin</option>
-                    </optgroup>
-                    <optgroup label="Châu Đại Dương (UTC+10 đến UTC+14)">
-                        <option value="Australia/Sydney">UTC+10: Sydney, Melbourne, Brisbane</option>
-                        <option value="Australia/Lord_Howe">UTC+10:30: Lord Howe Is.</option>
-                        <option value="Pacific/Noumea">UTC+11: New Caledonia, Solomon Is.</option>
-                        <option value="Pacific/Auckland">UTC+12: Auckland, Suva, Fiji</option>
-                        <option value="Pacific/Chatham">UTC+12:45: Chatham Is.</option>
-                        <option value="Pacific/Tongatapu">UTC+13: Tonga, Apia, Samoa</option>
-                        <option value="Pacific/Kiritimati">UTC+14: Kiribati (Christmas Is.)</option>
-                    </optgroup>
-                </select>
+    <div class="selector-container">
+        <select class="tz-select" id="cityList">
+            <optgroup label="Tây Bán Cầu">
+                <option value="Pacific/Honolulu">UTC-10: Hawaii, Tahiti</option>
+                <option value="America/Anchorage">UTC-09: Alaska</option>
+                <option value="America/Los_Angeles">UTC-08: LA, Vancouver, Tijuana</option>
+                <option value="America/New_York">UTC-05: New York, Toronto, Miami</option>
+                <option value="America/Sao_Paulo">UTC-03: Sao Paulo, Buenos Aires</option>
+                <option value="Atlantic/South_Georgia">UTC-02: South Georgia (Đã fix)</option>
+            </optgroup>
+            
+            <optgroup label="Gốc & Châu Âu">
+                <option value="UTC">UTC+00: London, Dublin, Lisbon</option>
+                <option value="Europe/Paris">UTC+01: Paris, Berlin, Rome, Madrid</option>
+                <option value="Africa/Cairo">UTC+02: Cairo, Johannesburg, Kyiv</option>
+                <option value="Europe/Moscow">UTC+03: Moscow, Riyadh, Nairobi</option>
+            </optgroup>
 
-                <div class="monitor">
-                    <div class="time-display" id="mainTime">00:00:00</div>
-                    <div class="date-display" id="mainDate">Chủ Nhật, 08/03/2026</div>
-                    <div class="lunar-tag" id="mainLunar">Âm lịch: Đang tính...</div>
-                </div>
-            </section>
+            <optgroup label="Châu Á & Thái Bình Dương">
+                <option value="Asia/Kolkata">UTC+05:30: Mumbai, Delhi</option>
+                <option value="Asia/Ho_Chi_Minh" selected>UTC+07: Hà Nội, TP.HCM, Bangkok, Jakarta</option>
+                <option value="Asia/Singapore">UTC+08: Singapore, Bắc Kinh, Manila, Perth</option>
+                <option value="Asia/Tokyo">UTC+09: Tokyo, Seoul, Osaka</option>
+                <option value="Australia/Sydney">UTC+10: Sydney, Melbourne, Brisbane</option>
+                <option value="Pacific/Auckland">UTC+12: Auckland, Fiji</option>
+                <option value="Pacific/Kiritimati">UTC+14: Kiribati (Christmas Is.)</option>
+            </optgroup>
+        </select>
+    </div>
 
-            <section class="page-view"><div style="color:#222; text-align:center; margin-top:120px; font-weight:900">STOPWATCH ENGINE</div></section>
-            <section class="page-view"><div style="color:#222; text-align:center; margin-top:120px; font-weight:900">TIMER ENGINE</div></section>
-        </div>
+    <main class="main-display">
+        <div class="time-txt" id="clock">00:00:00</div>
+        <div class="date-txt" id="date">Chủ Nhật, 08/03/2026</div>
+        <div class="lunar-chip" id="lunar">Âm lịch: Đang tính...</div>
     </main>
 
-    <footer class="branding">
-        SAIGON • JUNE 2026 TRIP • 14TH BIRTHDAY PROJECT
+    <footer class="footer-info">
+        HCMC • JUNE 2026 TRIP AHEAD • 14TH BIRTHDAY
     </footer>
 </div>
 
 <script>
-    /* --- ENGINE LOGIC v12 --- */
-    function boot() {
-        const picker = document.getElementById('cityPicker');
+    function updateSystem() {
+        const picker = document.getElementById('cityList');
         
         setInterval(() => {
             const now = new Date();
             const zone = picker.value;
             
-            // Render Giờ (Native Font)
-            document.getElementById('mainTime').textContent = new Intl.DateTimeFormat('vi-VN', {
+            // Cập nhật Giờ (Font hệ thống xịn)
+            document.getElementById('clock').textContent = new Intl.DateTimeFormat('vi-VN', {
                 timeZone: zone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
             }).format(now);
 
-            // Render Ngày
-            const dayName = new Intl.DateTimeFormat('vi-VN', { timeZone: zone, weekday: 'long' }).format(now);
-            const dateStr = new Intl.DateTimeFormat('vi-VN', { timeZone: zone, day: '2-digit', month: '2-digit', year: 'numeric' }).format(now);
-            document.getElementById('mainDate').textContent = `${dayName}, ${dateStr}`;
+            // Cập nhật Ngày
+            const day = new Intl.DateTimeFormat('vi-VN', { timeZone: zone, weekday: 'long' }).format(now);
+            const fullDate = new Intl.DateTimeFormat('vi-VN', { timeZone: zone, day: '2-digit', month: '2-digit', year: 'numeric' }).format(now);
+            document.getElementById('date').textContent = `${day}, ${fullDate}`;
 
-            // Render Âm lịch
-            const lunarParts = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { 
+            // Cập nhật Âm lịch
+            const lunar = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { 
                 timeZone: zone, day: '2-digit', month: '2-digit' 
             }).format(now);
-            document.getElementById('mainLunar').textContent = `Âm lịch: Ngày ${lunarParts.replace('/', ' tháng ')}`;
+            document.getElementById('lunar').textContent = `Âm lịch: Ngày ${lunar.replace('/', ' tháng ')}`;
         }, 1000);
     }
 
-    function move(i) {
-        document.getElementById('masterSlider').style.transform = `translateX(-${i * 33.3333}%)`;
-        document.querySelectorAll('.tab-item').forEach((t, idx) => t.classList.toggle('active', idx === i));
-    }
-
-    window.onload = boot;
+    window.onload = updateSystem;
 </script>
 </body>
 </html>
