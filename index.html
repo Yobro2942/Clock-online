@@ -2,18 +2,22 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đồng Hồ Đa Năng - Giao Diện Trượt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Đồng Hồ Đa Năng</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            /* Ảnh nền bầu trời có cầu vồng */
             background: url('https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
@@ -21,28 +25,29 @@
             justify-content: center;
             align-items: center;
             color: #fff;
+            overflow: hidden;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 30px 20px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            overflow: hidden; /* Giấu các phần bị tràn ra ngoài để làm hiệu ứng trượt */
+            border-radius: 25px;
+            padding: 25px 15px;
+            width: 95%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
 
         /* Thanh điều hướng Tabs */
         .nav-tabs {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: space-around;
+            margin-bottom: 25px;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 5px;
         }
 
@@ -50,35 +55,30 @@
             flex: 1;
             background: transparent;
             border: none;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
         }
 
         .tab-btn.active {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             color: #ffeb3b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* Vùng chứa các mục trượt */
         .slider-wrapper {
             display: flex;
-            width: 300%; /* Vì có 3 mục nên độ rộng là 300% */
-            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Hiệu ứng trượt mượt */
+            width: 300%; 
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .section {
-            width: 33.3333%; /* Mỗi mục chiếm 1/3 tổng chiều rộng của slider-wrapper */
+            width: 33.3333%;
             padding: 0 10px;
             display: flex;
             flex-direction: column;
@@ -86,133 +86,122 @@
         }
 
         h2 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: #ffeb3b;
-            text-align: center;
         }
 
         /* Đồng hồ & Múi giờ */
         .tz-selector {
-            margin-bottom: 15px;
-            text-align: center;
+            margin-bottom: 20px;
         }
         select {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0, 0, 0, 0.4);
             color: #fff;
-            font-size: 1rem;
             outline: none;
-            cursor: pointer;
         }
 
         .clock-display {
             text-align: center;
         }
         .time-main {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: bold;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .date-main {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
         .lunar-date {
             font-size: 1rem;
             color: #ffd54f;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
         }
 
         /* Nút bấm chung */
         .action-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
             font-weight: bold;
             margin: 5px;
         }
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
+        .action-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.3);
         }
 
-        /* Bấm giờ (Stopwatch) & Hẹn giờ (Timer) */
+        /* Bấm giờ & Hẹn giờ */
         .display-box {
-            font-size: 2.2rem;
-            font-family: monospace;
-            text-align: center;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
+            font-size: 2.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 15px;
         }
 
         .lap-list {
             list-style: none;
-            max-height: 120px;
+            max-height: 150px;
             width: 100%;
             overflow-y: auto;
             margin-top: 15px;
-            font-family: monospace;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 12px;
             padding: 10px;
         }
         .lap-list li {
-            border-bottom: 1px dashed rgba(255,255,255,0.2);
-            padding: 6px 0;
-            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
         }
 
         /* Điều khiển Hẹn giờ */
         .timer-controls {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         .timer-unit {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .timer-unit span {
-            font-size: 0.8rem;
-            color: #ddd;
-            margin-bottom: 5px;
-        }
-        .timer-unit .val {
+        .timer-unit span { font-size: 0.7rem; margin-bottom: 5px; opacity: 0.8; }
+        .val {
             font-size: 1.5rem;
-            font-family: monospace;
-            width: 50px;
-            text-align: center;
+            font-weight: bold;
             background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-            padding: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 50px;
+            text-align: center;
         }
         .arrow-btn {
-            background: transparent;
+            background: none;
             border: none;
-            font-size: 1.2rem;
-            padding: 2px 10px;
-            margin: 0;
             color: #ffeb3b;
+            font-size: 1.2rem;
+            padding: 5px;
             cursor: pointer;
         }
-        .arrow-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-radius: 5px;
-        }
-        
-        /* Chỉnh thanh cuộn cho lap-list mượt hơn */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -225,251 +214,171 @@
     </div>
 
     <div class="slider-wrapper" id="slider">
-        
-        <div class="section" id="sec-clock">
+        <div class="section">
             <div class="tz-selector">
-                <label for="tz-select">Múi giờ: </label>
                 <select id="tz-select"></select>
             </div>
             <div class="clock-display">
                 <div class="time-main" id="current-time">00:00:00</div>
-                <div class="date-main" id="solar-date">Đang tải...</div>
-                <div class="lunar-date" id="lunar-date">Đang tải...</div>
+                <div class="date-main" id="solar-date">--/--/----</div>
+                <div class="lunar-date" id="lunar-date">Đang tính...</div>
             </div>
         </div>
 
-        <div class="section" id="sec-stopwatch">
+        <div class="section">
             <h2>Bấm Giờ</h2>
             <div class="display-box" id="sw-display">00:00:00:00</div>
-            <div style="text-align: center;">
+            <div>
                 <button class="action-btn" id="sw-start">Bắt đầu</button>
-                <button class="action-btn" id="sw-lap">Vòng (Lap)</button>
-                <button class="action-btn" id="sw-reset">Đặt lại</button>
+                <button class="action-btn" id="sw-lap">Vòng</button>
+                <button class="action-btn" id="sw-reset">Xóa</button>
             </div>
             <ul class="lap-list" id="lap-list"></ul>
         </div>
 
-        <div class="section" id="sec-timer">
+        <div class="section">
             <h2>Hẹn Giờ</h2>
             <div class="timer-controls">
                 <div class="timer-unit">
-                    <span>Giờ</span>
                     <button class="arrow-btn" onclick="adjTimer('h', 1)">▲</button>
                     <div class="val" id="tm-h">00</div>
                     <button class="arrow-btn" onclick="adjTimer('h', -1)">▼</button>
+                    <span>GIỜ</span>
                 </div>
                 <div class="timer-unit">
-                    <span>Phút</span>
                     <button class="arrow-btn" onclick="adjTimer('m', 1)">▲</button>
                     <div class="val" id="tm-m">00</div>
                     <button class="arrow-btn" onclick="adjTimer('m', -1)">▼</button>
+                    <span>PHÚT</span>
                 </div>
                 <div class="timer-unit">
-                    <span>Giây</span>
                     <button class="arrow-btn" onclick="adjTimer('s', 1)">▲</button>
                     <div class="val" id="tm-s">00</div>
                     <button class="arrow-btn" onclick="adjTimer('s', -1)">▼</button>
-                </div>
-                <div class="timer-unit">
-                    <span>T.Tắc</span>
-                    <button class="arrow-btn" onclick="adjTimer('ms', 1)">▲</button>
-                    <div class="val" id="tm-ms">00</div>
-                    <button class="arrow-btn" onclick="adjTimer('ms', -1)">▼</button>
+                    <span>GIÂY</span>
                 </div>
             </div>
-            <div style="text-align: center;">
+            <div>
                 <button class="action-btn" id="tm-start">Bắt đầu / Dừng</button>
                 <button class="action-btn" id="tm-reset">Đặt lại</button>
             </div>
         </div>
+    </div>
+</div>
 
-    </div> </div> <script>
-    /* =========================================
-       0. HIỆU ỨNG CHUYỂN TAB MƯỢT MÀ
-       ========================================= */
+<script>
+    // 1. CHUYỂN TAB MƯỢT MÀ
     function switchTab(index) {
-        const slider = document.getElementById('slider');
+        document.getElementById('slider').style.transform = `translateX(-${index * 33.3333}%)`;
         const tabs = document.querySelectorAll('.tab-btn');
-        
-        // Trượt thẻ slider-wrapper sang trái dựa vào index (0%, -33.33%, -66.66%)
-        slider.style.transform = `translateX(-${index * 33.3333}%)`;
-        
-        // Đổi màu nút Tab đang được chọn
-        tabs.forEach((tab, i) => {
-            if(i === index) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
+        tabs.forEach((t, i) => t.classList.toggle('active', i === index));
     }
 
-    /* =========================================
-       1. KHỞI TẠO MÚI GIỜ & ĐỒNG HỒ
-       ========================================= */
+    // 2. ĐỒNG HỒ & ĐỊNH DẠNG NGÀY dd/mm/yyyy
     const tzSelect = document.getElementById('tz-select');
-    for (let i = -12; i <= 11; i++) {
-        const option = document.createElement('option');
-        const sign = i > 0 ? '+' : (i < 0 ? '-' : '');
-        const gmtOffset = -i; 
-        const gmtString = gmtOffset >= 0 ? `+${gmtOffset}` : `${gmtOffset}`;
-        
-        option.value = i === 0 ? 'UTC' : `Etc/GMT${gmtString}`;
-        option.textContent = `UTC ${sign}${Math.abs(i)}`;
-        
-        if (i === 7) option.selected = true; // Mặc định UTC+7
-        tzSelect.appendChild(option);
+    for (let i = -12; i <= 12; i++) {
+        const opt = document.createElement('option');
+        const offset = i >= 0 ? `+${i}` : i;
+        opt.value = i === 0 ? 'UTC' : `Etc/GMT${i > 0 ? '-' : '+'}${Math.abs(i)}`;
+        opt.textContent = `Múi giờ UTC ${offset}`;
+        if (i === 7) opt.selected = true;
+        tzSelect.appendChild(opt);
     }
 
     function updateClock() {
-        const selectedTz = tzSelect.value;
+        const tz = tzSelect.value;
         const now = new Date();
 
-        const timeStr = new Intl.DateTimeFormat('vi-VN', {
-            timeZone: selectedTz,
-            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        // Giờ
+        document.getElementById('current-time').textContent = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
         }).format(now);
-        document.getElementById('current-time').textContent = timeStr;
 
-        const solarStr = new Intl.DateTimeFormat('vi-VN', {
-            timeZone: selectedTz,
-            weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric'
-        }).format(now);
-        document.getElementById('solar-date').textContent = "Dương lịch: " + solarStr;
+        // Dương lịch: dd/mm/yyyy
+        const parts = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric'
+        }).formatToParts(now);
+        const d = parts.find(p => p.type === 'day').value;
+        const m = parts.find(p => p.type === 'month').value;
+        const y = parts.find(p => p.type === 'year').value;
+        document.getElementById('solar-date').textContent = `${d}/${m}/${y}`;
 
-        const lunarStr = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', {
-            timeZone: selectedTz,
-            day: '2-digit', month: '2-digit', year: 'numeric'
+        // Âm lịch
+        const lunar = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', {
+            timeZone: tz, day: '2-digit', month: '2-digit'
         }).format(now);
-        document.getElementById('lunar-date').textContent = "Âm lịch: Ngày " + lunarStr.replace('/', ' tháng ').replace('/', ' năm ');
+        document.getElementById('lunar-date').textContent = `Âm lịch: Ngày ${lunar.replace('/', ' tháng ')}`;
     }
-    
     setInterval(updateClock, 1000);
-    tzSelect.addEventListener('change', updateClock);
     updateClock();
 
-    /* =========================================
-       2. BẤM GIỜ THỜI GIAN TRÔI QUA (STOPWATCH)
-       ========================================= */
-    let swInterval;
-    let swTime = 0; 
-    let isSwRunning = false;
-    let lapCount = 1;
-
-    const swDisplay = document.getElementById('sw-display');
-    const lapList = document.getElementById('lap-list');
-
-    function formatTimeString(totalCentiseconds) {
-        const h = Math.floor(totalCentiseconds / 360000);
-        const m = Math.floor((totalCentiseconds % 360000) / 6000);
-        const s = Math.floor((totalCentiseconds % 6000) / 100);
-        const cs = totalCentiseconds % 100;
-        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}:${String(cs).padStart(2, '0')}`;
+    // 3. BẤM GIỜ
+    let swTime = 0, swInt, isSw = false;
+    const swStartBtn = document.getElementById('sw-start');
+    
+    function fmt(cs) {
+        const h = Math.floor(cs/360000), m = Math.floor((cs%360000)/6000), s = Math.floor((cs%6000)/100), ms = cs%100;
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}:${String(ms).padStart(2,'0')}`;
     }
 
-    document.getElementById('sw-start').addEventListener('click', function() {
-        if (!isSwRunning) {
-            isSwRunning = true;
-            this.textContent = "Tạm dừng";
-            swInterval = setInterval(() => {
-                swTime++;
-                swDisplay.textContent = formatTimeString(swTime);
-            }, 10);
+    swStartBtn.onclick = () => {
+        if(!isSw) {
+            isSw = true; swStartBtn.textContent = "Dừng";
+            swInt = setInterval(() => { swTime++; document.getElementById('sw-display').textContent = fmt(swTime); }, 10);
         } else {
-            isSwRunning = false;
-            this.textContent = "Tiếp tục";
-            clearInterval(swInterval);
+            isSw = false; swStartBtn.textContent = "Tiếp tục"; clearInterval(swInt);
         }
-    });
+    };
 
-    document.getElementById('sw-lap').addEventListener('click', () => {
-        if (isSwRunning) {
+    document.getElementById('sw-lap').onclick = () => {
+        if(isSw) {
             const li = document.createElement('li');
-            li.textContent = `Vòng ${lapCount}: ${formatTimeString(swTime)}`;
-            lapList.prepend(li);
-            lapCount++;
+            li.innerHTML = `<span>Vòng ${document.getElementById('lap-list').children.length + 1}</span> <span>${fmt(swTime)}</span>`;
+            document.getElementById('lap-list').prepend(li);
         }
-    });
+    };
 
-    document.getElementById('sw-reset').addEventListener('click', () => {
-        isSwRunning = false;
-        clearInterval(swInterval);
-        swTime = 0;
-        lapCount = 1;
-        swDisplay.textContent = "00:00:00:00";
-        document.getElementById('sw-start').textContent = "Bắt đầu";
-        lapList.innerHTML = '';
-    });
+    document.getElementById('sw-reset').onclick = () => {
+        clearInterval(swInt); isSw = false; swTime = 0;
+        document.getElementById('sw-display').textContent = "00:00:00:00";
+        swStartBtn.textContent = "Bắt đầu"; document.getElementById('lap-list').innerHTML = '';
+    };
 
-    /* =========================================
-       3. HẸN GIỜ (TIMER)
-       ========================================= */
-    let tmVals = { h: 0, m: 0, s: 0, ms: 0 };
-    let tmInterval;
-    let isTmRunning = false;
-    let totalTmCentiseconds = 0;
-
-    function updateTmDisplay() {
-        document.getElementById('tm-h').textContent = String(tmVals.h).padStart(2, '0');
-        document.getElementById('tm-m').textContent = String(tmVals.m).padStart(2, '0');
-        document.getElementById('tm-s').textContent = String(tmVals.s).padStart(2, '0');
-        document.getElementById('tm-ms').textContent = String(tmVals.ms).padStart(2, '0');
+    // 4. HẸN GIỜ
+    let tm = { h:0, m:0, s:0 }, tmInt, isTm = false;
+    function upTm() {
+        document.getElementById('tm-h').textContent = String(tm.h).padStart(2,'0');
+        document.getElementById('tm-m').textContent = String(tm.m).padStart(2,'0');
+        document.getElementById('tm-s').textContent = String(tm.s).padStart(2,'0');
     }
 
-    window.adjTimer = function(unit, amt) {
-        if (isTmRunning) return; 
-        tmVals[unit] += amt;
-        
-        if (unit === 'ms' && tmVals.ms > 99) { tmVals.ms = 0; tmVals.s++; }
-        if (unit === 'ms' && tmVals.ms < 0) { tmVals.ms = 99; tmVals.s = Math.max(0, tmVals.s - 1); }
-        
-        if (unit === 's' && tmVals.s > 59) { tmVals.s = 0; tmVals.m++; }
-        if (unit === 's' && tmVals.s < 0) { tmVals.s = 59; tmVals.m = Math.max(0, tmVals.m - 1); }
-        
-        if (unit === 'm' && tmVals.m > 59) { tmVals.m = 0; tmVals.h++; }
-        if (unit === 'm' && tmVals.m < 0) { tmVals.m = 59; tmVals.h = Math.max(0, tmVals.h - 1); }
-        
-        if (tmVals.h < 0) tmVals.h = 0;
-        
-        updateTmDisplay();
-    }
+    window.adjTimer = (u, a) => {
+        if(isTm) return;
+        tm[u] += a;
+        if(tm[u] < 0) tm[u] = 0;
+        if(tm.m > 59) tm.m = 0; if(tm.s > 59) tm.s = 0;
+        upTm();
+    };
 
-    document.getElementById('tm-start').addEventListener('click', function() {
-        if (!isTmRunning) {
-            totalTmCentiseconds = (tmVals.h * 360000) + (tmVals.m * 6000) + (tmVals.s * 100) + tmVals.ms;
-            if (totalTmCentiseconds <= 0) return;
-            
-            isTmRunning = true;
-            tmInterval = setInterval(() => {
-                totalTmCentiseconds--;
-                
-                tmVals.h = Math.floor(totalTmCentiseconds / 360000);
-                tmVals.m = Math.floor((totalTmCentiseconds % 360000) / 6000);
-                tmVals.s = Math.floor((totalTmCentiseconds % 6000) / 100);
-                tmVals.ms = totalTmCentiseconds % 100;
-                
-                updateTmDisplay();
-
-                if (totalTmCentiseconds <= 0) {
-                    clearInterval(tmInterval);
-                    isTmRunning = false;
-                    alert("Đã hết thời gian hẹn giờ!");
-                }
-            }, 10);
+    document.getElementById('tm-start').onclick = () => {
+        if(!isTm) {
+            let total = tm.h*3600 + tm.m*60 + tm.s;
+            if(total <= 0) return;
+            isTm = true;
+            tmInt = setInterval(() => {
+                total--;
+                tm.h = Math.floor(total/3600); tm.m = Math.floor((total%3600)/60); tm.s = total%60;
+                upTm();
+                if(total <= 0) { clearInterval(tmInt); isTm = false; alert("Hết giờ!"); }
+            }, 1000);
         } else {
-            isTmRunning = false;
-            clearInterval(tmInterval);
+            isTm = false; clearInterval(tmInt);
         }
-    });
+    };
 
-    document.getElementById('tm-reset').addEventListener('click', () => {
-        isTmRunning = false;
-        clearInterval(tmInterval);
-        tmVals = { h: 0, m: 0, s: 0, ms: 0 };
-        updateTmDisplay();
-    });
-
+    document.getElementById('tm-reset').onclick = () => {
+        clearInterval(tmInt); isTm = false; tm = {h:0, m:0, s:0}; upTm();
+    };
 </script>
 </body>
 </html>
-
