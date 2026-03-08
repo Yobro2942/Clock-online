@@ -3,397 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Earth Clock Ultimate Pro Max v16</title>
+    <title>Global Earth Clock v18 - Full UTC Matrix</title>
     
     <style>
-        /* --- 1. HỆ THỐNG BIẾN & CẤU HÌNH GIAO DIỆN (LINE 15-50) --- */
+        /* --- 1. CONFIG & SYSTEM CORE --- */
         :root {
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: "SF Mono", "Roboto Mono", monospace;
-            --neon-blue: #00d2ff;
-            --neon-green: #00ffa2;
-            --neon-red: #ff4b2b;
-            --glass-deep: rgba(0, 0, 0, 0.88);
-            --border-light: rgba(255, 255, 255, 0.15);
-            --app-h: 100dvh;
+            --font-sys: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-num: "SF Mono", "Roboto Mono", monospace;
+            --cyan: #00d2ff;
+            --green: #00ffa2;
+            --red: #ff4b2b;
+            --glass: rgba(0, 0, 0, 0.92);
+            --safe-h: 100dvh;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-main);
+            margin: 0; padding: 0;
+            font-family: var(--font-sys);
             -webkit-font-smoothing: antialiased;
             -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
-            width: 100vw;
-            height: var(--app-h);
-            overflow: hidden;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100vw; height: var(--safe-h);
+            overflow: hidden; background: #000;
+            display: flex; justify-content: center; align-items: center;
             position: fixed;
         }
 
-        /* --- 2. HIỆU ỨNG NỀN TRÁI ĐẤT & VŨ TRỤ (LINE 52-90) --- */
-        .universe-bg {
+        /* --- 2. ANIMATED EARTH BACKGROUND --- */
+        .earth-orbit {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center;
             background-size: cover;
             z-index: -1;
-            filter: brightness(0.35) contrast(1.1);
-            transform: scale(1.1);
-            animation: slowRotate 180s linear infinite;
+            filter: brightness(0.35);
+            animation: slowOrbit 120s linear infinite;
         }
 
-        @keyframes slowRotate {
-            from { transform: rotate(0deg) scale(1.1); }
-            to { transform: rotate(3deg) scale(1.2); }
+        @keyframes slowOrbit {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
-        /* --- 3. KHUNG APP VẬT LÝ - CHỐNG TRÀN TUYỆT ĐỐI (LINE 92-150) --- */
+        /* --- 3. PHYSICAL APP SHELL --- */
         .app-shell {
             position: relative;
-            width: 94vw;
-            max-width: 410px;
-            height: calc(var(--app-h) - 100px);
-            max-height: 780px;
-            background: var(--glass-deep);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-radius: 54px;
-            border: 1px solid var(--border-light);
-            display: flex;
-            flex-direction: column;
+            width: 92vw; max-width: 400px;
+            height: calc(var(--safe-h) - 100px); max-height: 800px;
+            background: var(--glass);
+            backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(45px);
+            border-radius: 52px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex; flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 50px 150px rgba(0,0,0,1);
-            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 60px 150px rgba(0,0,0,1);
+            z-index: 100;
         }
 
-        /* Header Tabs */
-        .header-nav {
+        /* --- 4. INTERACTIVE TABS (SỬA LỖI ẤN) --- */
+        .nav-header {
             padding: 35px 25px 15px;
-            flex-shrink: 0;
+            z-index: 1000;
         }
 
-        .tab-group {
+        .tab-box {
             display: flex;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 22px;
-            padding: 5px;
-            gap: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 22px; padding: 6px; gap: 6px;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 14px 0;
-            border: none;
-            background: transparent;
-            color: #555;
-            font-weight: 800;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-            border-radius: 18px;
+            flex: 1; padding: 15px 0; border: none; background: transparent;
+            color: #555; font-weight: 800; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            cursor: pointer; border-radius: 16px;
+            transition: all 0.4s ease;
         }
 
         .tab-btn.active {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4);
+            background: var(--cyan); color: #000;
+            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.4);
         }
 
-        /* --- 4. VIEWPORT ENGINE (LINE 152-250) --- */
-        .main-container {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
+        /* --- 5. MAIN SLIDER ENGINE --- */
+        .view-frame { flex: 1; overflow: hidden; }
+        .slider {
+            display: flex; width: 300%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .page {
+            width: 33.3333%; height: 100%;
+            padding: 10px 25px; display: flex; flex-direction: column; align-items: center;
         }
 
-        .slider-wrapper {
-            display: flex;
-            width: 300%;
-            height: 100%;
-            transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .page-content {
-            width: 33.3333%;
-            height: 100%;
-            padding: 10px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Dropdown Style */
+        /* --- 6. TIMEZONE SELECTOR (FULL UTC) --- */
         .tz-picker {
-            width: 100%;
-            padding: 18px;
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            font-size: 14px;
-            margin-bottom: 30px;
-            outline: none;
-            appearance: none;
+            width: 100%; padding: 18px;
+            background: rgba(20,20,20,0.8); color: #fff;
+            border: 1px solid #444; border-radius: 20px;
+            font-size: 13px; margin-bottom: 20px;
+            outline: none; appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            cursor: pointer;
+            background-repeat: no-repeat; background-position: right 15px center;
         }
 
-        /* Clock Visuals */
-        .display-unit {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+        /* --- 7. DISPLAYS --- */
+        .main-display {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        .time-txt {
+            font-size: 4.8rem; font-weight: 950; color: #fff;
+            letter-spacing: -3px; font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 30px rgba(255,255,255,0.1);
+        }
+        .date-txt { font-size: 1.3rem; color: #888; font-weight: 600; margin-top: 5px; }
+        .lunar-chip {
+            margin-top: 35px; background: rgba(0, 210, 255, 0.1);
+            border: 1px solid var(--cyan); color: var(--cyan);
+            padding: 10px 30px; border-radius: 35px; font-weight: 800;
         }
 
-        .main-time {
-            font-size: 4.8rem;
+        /* --- 8. STOPWATCH & TIMER STYLES --- */
+        .mono-display {
+            font-family: var(--font-num); font-size: 4.2rem;
+            color: #fff; margin: 50px 0; font-weight: 300;
+        }
+        .btn-row { display: flex; gap: 12px; width: 100%; }
+        .btn {
+            flex: 1; padding: 20px 0; border-radius: 20px;
+            border: none; font-weight: 950; font-size: 11px;
+            text-transform: uppercase; cursor: pointer;
+        }
+        .start { background: var(--green); color: #000; }
+        .stop { background: var(--red); color: #fff; }
+        .reset { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .tm-inputs { display: flex; gap: 10px; margin-bottom: 30px; }
+        .tm-in {
+            width: 70px; padding: 15px; background: #111;
+            border: 1px solid #333; border-radius: 15px;
+            color: #fff; text-align: center; font-size: 22px;
+        }
+
+        /* --- 9. FOOTER --- */
+        .footer {
+            padding: 25px; text-align: center; font-size: 10px;
+            color: #333; text-transform: uppercase; letter-spacing: 2.5px;
             font-weight: 950;
-            color: #fff;
-            line-height: 0.9;
-            letter-spacing: -3px;
-            font-variant-numeric: tabular-nums;
-            margin-bottom: 15px;
-        }
-
-        .sub-info {
-            font-size: 1.3rem;
-            color: #777;
-            font-weight: 650;
-        }
-
-        .lunar-pill {
-            margin-top: 35px;
-            background: rgba(0, 210, 255, 0.08);
-            border: 1px solid rgba(0, 210, 255, 0.2);
-            color: var(--neon-blue);
-            padding: 10px 32px;
-            border-radius: 35px;
-            font-weight: 800;
-            font-size: 0.95rem;
-        }
-
-        /* --- 5. MODULE PHỤ: BẤM GIỜ & HẸN GIỜ (LINE 252-320) --- */
-        .sw-time {
-            font-family: var(--font-mono);
-            font-size: 4rem;
-            color: #fff;
-            margin-bottom: 30px;
-        }
-
-        .btn-row {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 18px 0;
-            border-radius: 20px;
-            border: none;
-            font-weight: 900;
-            font-size: 12px;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .btn-start { background: var(--neon-green); color: #000; }
-        .btn-stop { background: var(--neon-red); color: #fff; }
-        .btn-reset { background: rgba(255,255,255,0.1); color: #fff; }
-
-        /* Branding Footer */
-        .branding-footer {
-            padding: 25px;
-            text-align: center;
-            font-size: 10px;
-            color: #333;
-            text-transform: uppercase;
-            letter-spacing: 2.8px;
-            font-weight: 900;
-            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
-<div class="universe-bg"></div>
+<div class="earth-orbit"></div>
 
 <div class="app-shell">
-    <header class="header-nav">
-        <div class="tab-group">
-            <button class="tab-btn active" onclick="nav(0)">Đồng Hồ</button>
-            <button class="tab-btn" onclick="nav(1)">Bấm Giờ</button>
-            <button class="tab-btn" onclick="nav(2)">Hẹn Giờ</button>
+    <header class="nav-header">
+        <div class="tab-box">
+            <button class="tab-btn active" onclick="jump(0)">Đồng Hồ</button>
+            <button class="tab-btn" onclick="jump(1)">Bấm Giờ</button>
+            <button class="tab-btn" onclick="jump(2)">Hẹn Giờ</button>
         </div>
     </header>
 
-    <main class="main-container">
-        <div class="slider-wrapper" id="mainSlider">
+    <main class="view-frame">
+        <div class="slider" id="mainSlider">
             
-            <section class="page-content">
-                <select class="tz-picker" id="tzSelect">
-                    <optgroup label="Thái Bình Dương">
+            <section class="page">
+                <select class="tz-picker" id="tzPicker">
+                    <optgroup label="Tây Bán Cầu (UTC-12 đến UTC-1)">
+                        <option value="Etc/GMT+12">UTC-12: Baker Island</option>
                         <option value="Pacific/Honolulu">UTC-10: Hawaii</option>
                         <option value="America/Anchorage">UTC-09: Alaska</option>
-                        <option value="America/Los_Angeles">UTC-08: LA, Vancouver</option>
-                    </optgroup>
-                    <optgroup label="Châu Mỹ">
-                        <option value="America/Denver">UTC-07: Denver, Phoenix</option>
-                        <option value="America/Chicago">UTC-06: Chicago, Mexico</option>
-                        <option value="America/New_York">UTC-05: New York, Toronto</option>
-                        <option value="America/Sao_Paulo">UTC-03: Brazil, Argentina</option>
+                        <option value="America/Los_Angeles">UTC-08: San Francisco</option>
+                        <option value="America/Denver">UTC-07: Phoenix</option>
+                        <option value="America/Chicago">UTC-06: Mexico City</option>
+                        <option value="America/New_York">UTC-05: New York</option>
+                        <option value="America/Caracas">UTC-04: Caracas</option>
+                        <option value="America/Sao_Paulo">UTC-03: Sao Paulo</option>
                         <option value="Atlantic/South_Georgia">UTC-02: South Georgia</option>
+                        <option value="Atlantic/Azores">UTC-01: Azores</option>
                     </optgroup>
-                    <optgroup label="Châu Âu & Châu Phi">
-                        <option value="UTC">UTC+00: London, Dublin</option>
-                        <option value="Europe/Paris">UTC+01: Paris, Berlin, Rome</option>
-                        <option value="Africa/Cairo">UTC+02: Cairo, Johannesburg</option>
+                    <optgroup label="Gốc & Đông Bán Cầu (UTC+0 đến UTC+14)">
+                        <option value="UTC">UTC+00: London, Lisbon</option>
+                        <option value="Europe/Paris">UTC+01: Paris, Berlin</option>
+                        <option value="Africa/Cairo">UTC+02: Cairo, Kyiv</option>
                         <option value="Europe/Moscow">UTC+03: Moscow, Riyadh</option>
-                    </optgroup>
-                    <optgroup label="Châu Á & Thái Bình Dương">
+                        <option value="Asia/Dubai">UTC+04: Dubai</option>
+                        <option value="Asia/Karachi">UTC+05: Karachi</option>
                         <option value="Asia/Ho_Chi_Minh" selected>UTC+07: Hà Nội, Bangkok, Jakarta</option>
                         <option value="Asia/Singapore">UTC+08: Singapore, Bắc Kinh</option>
                         <option value="Asia/Tokyo">UTC+09: Tokyo, Seoul</option>
-                        <option value="Australia/Sydney">UTC+10: Sydney, Melbourne</option>
-                        <option value="Pacific/Auckland">UTC+12: Auckland, Fiji</option>
+                        <option value="Australia/Sydney">UTC+10: Sydney</option>
+                        <option value="Pacific/Auckland">UTC+12: Auckland</option>
                         <option value="Pacific/Kiritimati">UTC+14: Kiribati</option>
                     </optgroup>
                 </select>
-
-                <div class="display-unit">
-                    <div class="main-time" id="clockBox">00:00:00</div>
-                    <div class="sub-info" id="dateBox">Đang cập nhật...</div>
-                    <div class="lunar-pill" id="lunarBox">Âm lịch: Đang tính...</div>
+                <div class="main-display">
+                    <div class="time-txt" id="clk">00:00:00</div>
+                    <div class="date-txt" id="dt">Đang tải...</div>
+                    <div class="lunar-chip" id="ln">Âm lịch: ...</div>
                 </div>
             </section>
 
-            <section class="page-content">
-                <div class="display-unit">
-                    <div class="sw-time" id="swDisplay">00:00.00</div>
-                    <div class="btn-row">
-                        <button class="action-btn btn-start" id="swStart" onclick="startSW()">Bắt đầu</button>
-                        <button class="action-btn btn-reset" onclick="resetSW()">Đặt lại</button>
-                    </div>
+            <section class="page">
+                <div class="mono-display" id="swTxt">00:00.00</div>
+                <div class="btn-row">
+                    <button class="btn start" id="swBtn" onclick="swToggle()">Bắt đầu</button>
+                    <button class="btn reset" onclick="swReset()">Đặt lại</button>
                 </div>
             </section>
 
-            <section class="page-content">
-                <div class="display-unit">
-                    <div class="sw-time" id="tmDisplay">05:00</div>
-                    <div class="btn-row">
-                        <button class="action-btn btn-start" onclick="alert('Đang phát triển!')">Bắt đầu</button>
-                        <button class="action-btn btn-reset">Xóa</button>
-                    </div>
+            <section class="page">
+                <div class="mono-display" id="tmTxt">05:00</div>
+                <div class="tm-inputs">
+                    <input type="number" class="tm-in" id="mIn" value="5">
+                    <input type="number" class="tm-in" id="sIn" value="0">
+                </div>
+                <div class="btn-row">
+                    <button class="btn start" id="tmBtn" onclick="tmToggle()">Bắt đầu</button>
+                    <button class="btn reset" onclick="tmReset()">Xóa</button>
                 </div>
             </section>
-
         </div>
     </main>
 
-    <footer class="branding-footer">
-        SAIGON • JUNE 2026 TRIP • 14TH BIRTHDAY PROJECT
-    </footer>
+    <footer class="footer">SAIGON • JUNE 2026 TRIP • 14TH BIRTHDAY PROJECT</footer>
 </div>
 
 <script>
-    /* --- 6. LOGIC ENGINE - HƠN 100 DÒNG CODE JAVASCRIPT --- */
-
-    // Điều hướng Tab
-    function nav(idx) {
-        document.getElementById('mainSlider').style.transform = `translateX(-${idx * 33.3333}%)`;
-        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    /* --- JAVASCRIPT MEGA ENGINE --- */
+    
+    // 1. Navigation
+    function jump(i) {
+        document.getElementById('mainSlider').style.transform = `translateX(-${i * 33.3333}%)`;
+        const btns = document.querySelectorAll('.tab-btn');
+        btns.forEach((b, idx) => b.classList.toggle('active', idx === i));
     }
 
-    // Xử lý Đồng hồ Múi giờ
-    function initClock() {
-        const select = document.getElementById('tzSelect');
-        const clockEl = document.getElementById('clockBox');
-        const dateEl = document.getElementById('dateBox');
-        const lunarEl = document.getElementById('lunarBox');
+    // 2. Clock Engine
+    function tick() {
+        const zone = document.getElementById('tzPicker').value;
+        const now = new Date();
+        
+        document.getElementById('clk').textContent = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: zone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).format(now);
 
-        setInterval(() => {
-            const now = new Date();
-            const tz = select.value;
+        const dOpt = { timeZone: zone, weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
+        document.getElementById('dt').textContent = new Intl.DateTimeFormat('vi-VN', dOpt).format(now);
 
-            // Giờ
-            clockEl.textContent = new Intl.DateTimeFormat('vi-VN', {
-                timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-            }).format(now);
-
-            // Ngày
-            const weekday = new Intl.DateTimeFormat('vi-VN', { timeZone: tz, weekday: 'long' }).format(now);
-            const dateStr = new Intl.DateTimeFormat('vi-VN', { timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric' }).format(now);
-            dateEl.textContent = `${weekday}, ${dateStr}`;
-
-            // Âm lịch
-            const lunar = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { timeZone: tz, day: '2-digit', month: '2-digit' }).format(now);
-            lunarEl.textContent = `Âm lịch: Ngày ${lunar.replace('/', ' tháng ')}`;
-        }, 1000);
+        const lu = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { timeZone: zone, day: '2-digit', month: '2-digit' }).format(now);
+        document.getElementById('ln').textContent = `Âm lịch: Ngày ${lu.replace('/', ' tháng ')}`;
     }
 
-    // Xử lý Bấm giờ (Stopwatch)
-    let swTime = 0;
-    let swInterval;
-    let swRunning = false;
-
-    function startSW() {
-        const btn = document.getElementById('swStart');
-        if(!swRunning) {
-            swRunning = true;
-            btn.textContent = "Dừng";
-            btn.className = "action-btn btn-stop";
-            swInterval = setInterval(() => {
-                swTime += 10;
-                updateSWDisplay();
-            }, 10);
+    // 3. Stopwatch Engine
+    let sMs = 0, sInt = null, sOn = false;
+    function swToggle() {
+        const b = document.getElementById('swBtn');
+        if(!sOn) {
+            sOn = true; b.textContent = "Dừng"; b.className = "btn stop";
+            sInt = setInterval(() => { sMs += 10; swRender(); }, 10);
         } else {
-            swRunning = false;
-            btn.textContent = "Tiếp tục";
-            btn.className = "action-btn btn-start";
-            clearInterval(swInterval);
+            sOn = false; b.textContent = "Tiếp tục"; b.className = "btn start";
+            clearInterval(sInt);
         }
     }
-
-    function resetSW() {
-        clearInterval(swInterval);
-        swTime = 0;
-        swRunning = false;
-        document.getElementById('swStart').textContent = "Bắt đầu";
-        document.getElementById('swStart').className = "action-btn btn-start";
-        updateSWDisplay();
+    function swReset() {
+        clearInterval(sInt); sMs = 0; sOn = false;
+        document.getElementById('swBtn').textContent = "Bắt đầu";
+        document.getElementById('swBtn').className = "btn start";
+        swRender();
+    }
+    function swRender() {
+        const ms = Math.floor((sMs % 1000) / 10), s = Math.floor((sMs / 1000) % 60), m = Math.floor(sMs / 60000);
+        document.getElementById('swTxt').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(2,'0')}`;
     }
 
-    function updateSWDisplay() {
-        const ms = Math.floor((swTime % 1000) / 10);
-        const s = Math.floor((swTime / 1000) % 60);
-        const m = Math.floor((swTime / 60000) % 60);
-        document.getElementById('swDisplay').textContent = 
-            `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+    // 4. Timer Engine
+    let tSec = 300, tInt = null, tOn = false;
+    function tmToggle() {
+        const b = document.getElementById('tmBtn');
+        if(!tOn) {
+            tSec = (parseInt(document.getElementById('mIn').value)||0)*60 + (parseInt(document.getElementById('sIn').value)||0);
+            if(tSec <= 0) return;
+            tOn = true; b.textContent = "Dừng"; b.className = "btn stop";
+            tInt = setInterval(() => {
+                tSec--; tmRender();
+                if(tSec <= 0) { clearInterval(tInt); alert("Hết giờ!"); tmReset(); }
+            }, 1000);
+        } else {
+            tOn = false; b.textContent = "Tiếp tục"; b.className = "btn start";
+            clearInterval(tInt);
+        }
+    }
+    function tmReset() {
+        clearInterval(tInt); tOn = false;
+        document.getElementById('tmBtn').textContent = "Bắt đầu";
+        document.getElementById('tmBtn').className = "btn start";
+        document.getElementById('tmTxt').textContent = "00:00";
+    }
+    function tmRender() {
+        const m = Math.floor(tSec / 60), s = tSec % 60;
+        document.getElementById('tmTxt').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
 
-    window.onload = () => {
-        initClock();
-        // Sẵn sàng cho các module tiếp theo
-    };
+    window.onload = () => { setInterval(tick, 1000); tick(); };
 </script>
 </body>
 </html>
