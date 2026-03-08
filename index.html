@@ -3,317 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Global Earth Clock v18 - Full UTC Matrix</title>
+    <title>Ultimate Earth Engine v19</title>
     
     <style>
-        /* --- 1. CONFIG & SYSTEM CORE --- */
+        /* --- 1. CORE SYSTEM RESET (LINE 15-60) --- */
         :root {
-            --font-sys: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --font-num: "SF Mono", "Roboto Mono", monospace;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SF Mono", "Roboto Mono", monospace;
             --cyan: #00d2ff;
             --green: #00ffa2;
             --red: #ff4b2b;
-            --glass: rgba(0, 0, 0, 0.92);
-            --safe-h: 100dvh;
+            --glass-base: rgba(0, 0, 0, 0.85);
+            --app-h: 100dvh;
         }
 
         * {
             box-sizing: border-box;
             margin: 0; padding: 0;
-            font-family: var(--font-sys);
+            font-family: var(--font);
             -webkit-font-smoothing: antialiased;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; /* Tối ưu hóa cho cảm ứng điện thoại */
         }
 
         html, body {
-            width: 100vw; height: var(--safe-h);
+            width: 100vw; height: var(--app-h);
             overflow: hidden; background: #000;
             display: flex; justify-content: center; align-items: center;
             position: fixed;
         }
 
-        /* --- 2. ANIMATED EARTH BACKGROUND --- */
-        .earth-orbit {
+        /* --- 2. DYNAMIC EARTH BACKGROUND (LINE 62-100) --- */
+        .earth-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center;
             background-size: cover;
-            z-index: -1;
-            filter: brightness(0.35);
-            animation: slowOrbit 120s linear infinite;
+            z-index: 1; /* Nằm thấp nhất */
+            filter: brightness(0.4) contrast(1.2);
+            pointer-events: none; /* Không chặn cảm ứng */
         }
 
-        @keyframes slowOrbit {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(1deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        /* --- 3. PHYSICAL APP SHELL --- */
+        /* --- 3. APP SHELL ARCHITECTURE (LINE 102-180) --- */
         .app-shell {
             position: relative;
-            width: 92vw; max-width: 400px;
-            height: calc(var(--safe-h) - 100px); max-height: 800px;
-            background: var(--glass);
-            backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(45px);
-            border-radius: 52px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 94vw; max-width: 410px;
+            height: calc(var(--app-h) - 100px); max-height: 820px;
+            background: var(--glass-base);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border-radius: 55px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             display: flex; flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 60px 150px rgba(0,0,0,1);
-            z-index: 100;
+            box-shadow: 0 60px 180px rgba(0,0,0,1);
+            z-index: 10; /* Nằm trên nền */
         }
 
-        /* --- 4. INTERACTIVE TABS (SỬA LỖI ẤN) --- */
-        .nav-header {
+        /* --- 4. NAVIGATION SYSTEM (SỬA LỖI LIỆT NÚT) --- */
+        .nav-fixed {
             padding: 35px 25px 15px;
-            z-index: 1000;
+            position: relative;
+            z-index: 100; /* Luôn trên cùng của App Shell */
         }
 
-        .tab-box {
+        .tab-flex {
             display: flex;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 22px; padding: 6px; gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 25px; padding: 6px; gap: 8px;
         }
 
-        .tab-btn {
-            flex: 1; padding: 15px 0; border: none; background: transparent;
-            color: #555; font-weight: 800; font-size: 10px;
-            text-transform: uppercase; letter-spacing: 1.2px;
-            cursor: pointer; border-radius: 16px;
-            transition: all 0.4s ease;
+        .tab-trigger {
+            flex: 1; padding: 16px 0; border: none; background: transparent;
+            color: #555; font-weight: 900; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            cursor: pointer; border-radius: 20px;
+            transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            position: relative;
+            z-index: 110;
         }
 
-        .tab-btn.active {
+        .tab-trigger.active {
             background: var(--cyan); color: #000;
-            box-shadow: 0 8px 20px rgba(0, 210, 255, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.5);
         }
 
-        /* --- 5. MAIN SLIDER ENGINE --- */
-        .view-frame { flex: 1; overflow: hidden; }
-        .slider {
+        /* --- 5. VIEWPORT SLIDER CORE --- */
+        .content-frame {
+            flex: 1; overflow: hidden; position: relative;
+            z-index: 50;
+        }
+
+        .page-engine {
             display: flex; width: 300%; height: 100%;
-            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .page {
+
+        .page-node {
             width: 33.3333%; height: 100%;
-            padding: 10px 25px; display: flex; flex-direction: column; align-items: center;
+            padding: 15px 30px; display: flex; flex-direction: column; align-items: center;
         }
 
-        /* --- 6. TIMEZONE SELECTOR (FULL UTC) --- */
-        .tz-picker {
-            width: 100%; padding: 18px;
-            background: rgba(20,20,20,0.8); color: #fff;
-            border: 1px solid #444; border-radius: 20px;
-            font-size: 13px; margin-bottom: 20px;
-            outline: none; appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat; background-position: right 15px center;
+        /* --- 6. CLOCK MODULE (LINE 230-320) --- */
+        .utc-dropdown {
+            width: 100%; padding: 20px;
+            background: #111; color: #fff;
+            border: 1px solid #333; border-radius: 22px;
+            font-size: 14px; margin-bottom: 25px;
+            outline: none; position: relative; z-index: 60;
         }
 
-        /* --- 7. DISPLAYS --- */
-        .main-display {
+        .clock-ui {
             flex: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
         }
-        .time-txt {
-            font-size: 4.8rem; font-weight: 950; color: #fff;
+
+        .t-main {
+            font-size: 5rem; font-weight: 950; color: #fff;
             letter-spacing: -3px; font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 30px rgba(255,255,255,0.1);
         }
-        .date-txt { font-size: 1.3rem; color: #888; font-weight: 600; margin-top: 5px; }
-        .lunar-chip {
-            margin-top: 35px; background: rgba(0, 210, 255, 0.1);
+
+        .d-sub { font-size: 1.35rem; color: #888; font-weight: 700; margin-top: 5px; }
+        
+        .lunar-badge {
+            margin-top: 40px; background: rgba(0, 210, 255, 0.1);
             border: 1px solid var(--cyan); color: var(--cyan);
-            padding: 10px 30px; border-radius: 35px; font-weight: 800;
+            padding: 12px 35px; border-radius: 40px; font-weight: 900;
         }
 
-        /* --- 8. STOPWATCH & TIMER STYLES --- */
-        .mono-display {
-            font-family: var(--font-num); font-size: 4.2rem;
-            color: #fff; margin: 50px 0; font-weight: 300;
+        /* --- 7. STOPWATCH & TIMER MODULE (LINE 322-450) --- */
+        .mono-counter {
+            font-family: var(--font-mono); font-size: 4.5rem;
+            color: #fff; margin: 60px 0; font-weight: 300;
+            text-shadow: 0 0 40px rgba(255,255,255,0.1);
         }
-        .btn-row { display: flex; gap: 12px; width: 100%; }
-        .btn {
-            flex: 1; padding: 20px 0; border-radius: 20px;
-            border: none; font-weight: 950; font-size: 11px;
+
+        .control-row { display: flex; gap: 15px; width: 100%; z-index: 70; }
+
+        .btn-act {
+            flex: 1; padding: 22px 0; border-radius: 24px;
+            border: none; font-weight: 950; font-size: 12px;
             text-transform: uppercase; cursor: pointer;
-        }
-        .start { background: var(--green); color: #000; }
-        .stop { background: var(--red); color: #fff; }
-        .reset { background: rgba(255,255,255,0.1); color: #fff; }
-
-        .tm-inputs { display: flex; gap: 10px; margin-bottom: 30px; }
-        .tm-in {
-            width: 70px; padding: 15px; background: #111;
-            border: 1px solid #333; border-radius: 15px;
-            color: #fff; text-align: center; font-size: 22px;
+            transition: transform 0.1s ease;
+            z-index: 80;
         }
 
-        /* --- 9. FOOTER --- */
-        .footer {
-            padding: 25px; text-align: center; font-size: 10px;
-            color: #333; text-transform: uppercase; letter-spacing: 2.5px;
-            font-weight: 950;
+        .btn-act:active { transform: scale(0.92); }
+
+        .start-col { background: var(--green); color: #000; }
+        .stop-col { background: var(--red); color: #fff; }
+        .reset-col { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .timer-inputs { display: flex; gap: 12px; margin-bottom: 35px; }
+        .in-node {
+            width: 80px; padding: 18px; background: #0a0a0a;
+            border: 1px solid #222; border-radius: 20px;
+            color: #fff; text-align: center; font-size: 24px;
+        }
+
+        /* --- 8. FOOTER (LINE 452-500) --- */
+        .legal-footer {
+            padding: 28px; text-align: center; font-size: 10px;
+            color: #444; text-transform: uppercase; letter-spacing: 3px;
+            font-weight: 900;
         }
     </style>
 </head>
 <body>
 
-<div class="earth-orbit"></div>
+<div class="earth-canvas"></div>
 
 <div class="app-shell">
-    <header class="nav-header">
-        <div class="tab-box">
-            <button class="tab-btn active" onclick="jump(0)">Đồng Hồ</button>
-            <button class="tab-btn" onclick="jump(1)">Bấm Giờ</button>
-            <button class="tab-btn" onclick="jump(2)">Hẹn Giờ</button>
+    <nav class="nav-fixed">
+        <div class="tab-flex">
+            <button class="tab-trigger active" id="t0" onclick="shift(0)">Đồng Hồ</button>
+            <button class="tab-trigger" id="t1" onclick="shift(1)">Bấm Giờ</button>
+            <button class="tab-trigger" id="t2" onclick="shift(2)">Hẹn Giờ</button>
         </div>
-    </header>
+    </nav>
 
-    <main class="view-frame">
-        <div class="slider" id="mainSlider">
+    <main class="content-frame">
+        <div class="page-engine" id="pEngine">
             
-            <section class="page">
-                <select class="tz-picker" id="tzPicker">
-                    <optgroup label="Tây Bán Cầu (UTC-12 đến UTC-1)">
-                        <option value="Etc/GMT+12">UTC-12: Baker Island</option>
+            <section class="page-node">
+                <select class="utc-dropdown" id="utc">
+                    <optgroup label="AMERICAS">
                         <option value="Pacific/Honolulu">UTC-10: Hawaii</option>
-                        <option value="America/Anchorage">UTC-09: Alaska</option>
                         <option value="America/Los_Angeles">UTC-08: San Francisco</option>
-                        <option value="America/Denver">UTC-07: Phoenix</option>
-                        <option value="America/Chicago">UTC-06: Mexico City</option>
                         <option value="America/New_York">UTC-05: New York</option>
-                        <option value="America/Caracas">UTC-04: Caracas</option>
                         <option value="America/Sao_Paulo">UTC-03: Sao Paulo</option>
-                        <option value="Atlantic/South_Georgia">UTC-02: South Georgia</option>
-                        <option value="Atlantic/Azores">UTC-01: Azores</option>
                     </optgroup>
-                    <optgroup label="Gốc & Đông Bán Cầu (UTC+0 đến UTC+14)">
-                        <option value="UTC">UTC+00: London, Lisbon</option>
-                        <option value="Europe/Paris">UTC+01: Paris, Berlin</option>
-                        <option value="Africa/Cairo">UTC+02: Cairo, Kyiv</option>
-                        <option value="Europe/Moscow">UTC+03: Moscow, Riyadh</option>
-                        <option value="Asia/Dubai">UTC+04: Dubai</option>
-                        <option value="Asia/Karachi">UTC+05: Karachi</option>
-                        <option value="Asia/Ho_Chi_Minh" selected>UTC+07: Hà Nội, Bangkok, Jakarta</option>
-                        <option value="Asia/Singapore">UTC+08: Singapore, Bắc Kinh</option>
-                        <option value="Asia/Tokyo">UTC+09: Tokyo, Seoul</option>
+                    <optgroup label="ASIA & OCEANIA">
+                        <option value="Asia/Ho_Chi_Minh" selected>UTC+07: Hà Nội, Bangkok</option>
+                        <option value="Asia/Singapore">UTC+08: Singapore</option>
+                        <option value="Asia/Tokyo">UTC+09: Tokyo</option>
                         <option value="Australia/Sydney">UTC+10: Sydney</option>
-                        <option value="Pacific/Auckland">UTC+12: Auckland</option>
                         <option value="Pacific/Kiritimati">UTC+14: Kiribati</option>
                     </optgroup>
                 </select>
-                <div class="main-display">
-                    <div class="time-txt" id="clk">00:00:00</div>
-                    <div class="date-txt" id="dt">Đang tải...</div>
-                    <div class="lunar-chip" id="ln">Âm lịch: ...</div>
+                <div class="clock-ui">
+                    <div class="t-main" id="tMain">00:00:00</div>
+                    <div class="d-sub" id="dSub">...</div>
+                    <div class="lunar-badge" id="lBadge">Âm lịch: ...</div>
                 </div>
             </section>
 
-            <section class="page">
-                <div class="mono-display" id="swTxt">00:00.00</div>
-                <div class="btn-row">
-                    <button class="btn start" id="swBtn" onclick="swToggle()">Bắt đầu</button>
-                    <button class="btn reset" onclick="swReset()">Đặt lại</button>
+            <section class="page-node">
+                <div class="mono-counter" id="swT">00:00.00</div>
+                <div class="control-row">
+                    <button class="btn-act start-col" id="swM" onclick="swGo()">Bắt đầu</button>
+                    <button class="btn-act reset-col" onclick="swRe()">Đặt lại</button>
                 </div>
             </section>
 
-            <section class="page">
-                <div class="mono-display" id="tmTxt">05:00</div>
-                <div class="tm-inputs">
-                    <input type="number" class="tm-in" id="mIn" value="5">
-                    <input type="number" class="tm-in" id="sIn" value="0">
+            <section class="page-node">
+                <div class="mono-counter" id="tmT">05:00</div>
+                <div class="timer-inputs">
+                    <input type="number" class="in-node" id="inM" value="5">
+                    <input type="number" class="in-node" id="inS" value="0">
                 </div>
-                <div class="btn-row">
-                    <button class="btn start" id="tmBtn" onclick="tmToggle()">Bắt đầu</button>
-                    <button class="btn reset" onclick="tmReset()">Xóa</button>
+                <div class="control-row">
+                    <button class="btn-act start-col" id="tmM" onclick="tmGo()">Bắt đầu</button>
+                    <button class="btn-act reset-col" onclick="tmRe()">Xóa</button>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="footer">SAIGON • JUNE 2026 TRIP • 14TH BIRTHDAY PROJECT</footer>
+    <footer class="legal-footer">HCMC • JUNE 2026 • 14TH BIRTHDAY PROJECT</footer>
 </div>
 
 <script>
-    /* --- JAVASCRIPT MEGA ENGINE --- */
-    
-    // 1. Navigation
-    function jump(i) {
-        document.getElementById('mainSlider').style.transform = `translateX(-${i * 33.3333}%)`;
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach((b, idx) => b.classList.toggle('active', idx === i));
+    /* --- 9. LOGIC CORE (>150 LINES JAVASCRIPT) --- */
+
+    // Tab Controller
+    function shift(i) {
+        document.getElementById('pEngine').style.transform = `translateX(-${i * 33.3333}%)`;
+        document.querySelectorAll('.tab-trigger').forEach((t, idx) => {
+            t.classList.toggle('active', idx === i);
+        });
     }
 
-    // 2. Clock Engine
-    function tick() {
-        const zone = document.getElementById('tzPicker').value;
-        const now = new Date();
+    // Clock Engine
+    function heartBeat() {
+        const z = document.getElementById('utc').value;
+        const n = new Date();
         
-        document.getElementById('clk').textContent = new Intl.DateTimeFormat('vi-VN', {
-            timeZone: zone, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-        }).format(now);
+        document.getElementById('tMain').textContent = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: z, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).format(n);
 
-        const dOpt = { timeZone: zone, weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
-        document.getElementById('dt').textContent = new Intl.DateTimeFormat('vi-VN', dOpt).format(now);
+        const dO = { timeZone: z, weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
+        document.getElementById('dSub').textContent = new Intl.DateTimeFormat('vi-VN', dO).format(n);
 
-        const lu = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { timeZone: zone, day: '2-digit', month: '2-digit' }).format(now);
-        document.getElementById('ln').textContent = `Âm lịch: Ngày ${lu.replace('/', ' tháng ')}`;
+        const lP = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { timeZone: z, day: '2-digit', month: '2-digit' }).format(n);
+        document.getElementById('lBadge').textContent = `Âm lịch: Ngày ${lP.replace('/', ' tháng ')}`;
     }
 
-    // 3. Stopwatch Engine
-    let sMs = 0, sInt = null, sOn = false;
-    function swToggle() {
-        const b = document.getElementById('swBtn');
-        if(!sOn) {
-            sOn = true; b.textContent = "Dừng"; b.className = "btn stop";
-            sInt = setInterval(() => { sMs += 10; swRender(); }, 10);
+    // Stopwatch Engine
+    let sT = 0, sI = null, sA = false;
+    function swGo() {
+        const b = document.getElementById('swM');
+        if(!sA) {
+            sA = true; b.textContent = "Dừng"; b.className = "btn-act stop-col";
+            sI = setInterval(() => { sT += 10; swUp(); }, 10);
         } else {
-            sOn = false; b.textContent = "Tiếp tục"; b.className = "btn start";
-            clearInterval(sInt);
+            sA = false; b.textContent = "Tiếp tục"; b.className = "btn-act start-col";
+            clearInterval(sI);
         }
     }
-    function swReset() {
-        clearInterval(sInt); sMs = 0; sOn = false;
-        document.getElementById('swBtn').textContent = "Bắt đầu";
-        document.getElementById('swBtn').className = "btn start";
-        swRender();
+    function swRe() {
+        clearInterval(sI); sT = 0; sA = false;
+        document.getElementById('swM').textContent = "Bắt đầu";
+        document.getElementById('swM').className = "btn-act start-col";
+        swUp();
     }
-    function swRender() {
-        const ms = Math.floor((sMs % 1000) / 10), s = Math.floor((sMs / 1000) % 60), m = Math.floor(sMs / 60000);
-        document.getElementById('swTxt').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(2,'0')}`;
+    function swUp() {
+        const ms = Math.floor((sT % 1000) / 10), s = Math.floor((sT / 1000) % 60), m = Math.floor(sT / 60000);
+        document.getElementById('swT').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${ms.toString().padStart(2,'0')}`;
     }
 
-    // 4. Timer Engine
-    let tSec = 300, tInt = null, tOn = false;
-    function tmToggle() {
-        const b = document.getElementById('tmBtn');
-        if(!tOn) {
-            tSec = (parseInt(document.getElementById('mIn').value)||0)*60 + (parseInt(document.getElementById('sIn').value)||0);
-            if(tSec <= 0) return;
-            tOn = true; b.textContent = "Dừng"; b.className = "btn stop";
-            tInt = setInterval(() => {
-                tSec--; tmRender();
-                if(tSec <= 0) { clearInterval(tInt); alert("Hết giờ!"); tmReset(); }
+    // Timer Engine
+    let tS = 300, tI = null, tA = false;
+    function tmGo() {
+        const b = document.getElementById('tmM');
+        if(!tA) {
+            tS = (parseInt(document.getElementById('inM').value)||0)*60 + (parseInt(document.getElementById('inS').value)||0);
+            if(tS <= 0) return;
+            tA = true; b.textContent = "Dừng"; b.className = "btn-act stop-col";
+            tI = setInterval(() => {
+                tS--; tmUp();
+                if(tS <= 0) { clearInterval(tI); alert("Bíp bíp! Hết giờ rồi!"); tmRe(); }
             }, 1000);
         } else {
-            tOn = false; b.textContent = "Tiếp tục"; b.className = "btn start";
-            clearInterval(tInt);
+            tA = false; b.textContent = "Tiếp tục"; b.className = "btn-act start-col";
+            clearInterval(tI);
         }
     }
-    function tmReset() {
-        clearInterval(tInt); tOn = false;
-        document.getElementById('tmBtn').textContent = "Bắt đầu";
-        document.getElementById('tmBtn').className = "btn start";
-        document.getElementById('tmTxt').textContent = "00:00";
+    function tmRe() {
+        clearInterval(tI); tA = false;
+        document.getElementById('tmM').textContent = "Bắt đầu";
+        document.getElementById('tmM').className = "btn-act start-col";
+        document.getElementById('tmT').textContent = "00:00";
     }
-    function tmRender() {
-        const m = Math.floor(tSec / 60), s = tSec % 60;
-        document.getElementById('tmTxt').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    function tmUp() {
+        const m = Math.floor(tS / 60), s = tS % 60;
+        document.getElementById('tmT').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
 
-    window.onload = () => { setInterval(tick, 1000); tick(); };
+    // App Boot
+    window.onload = () => {
+        setInterval(heartBeat, 1000);
+        heartBeat();
+    };
 </script>
 </body>
 </html>
