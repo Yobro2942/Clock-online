@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đồng Hồ Đa Năng Toàn Cầu</title>
+    <title>Đồng Hồ Đa Năng Pro</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
         body {
             background: #121212 url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden;
         }
+
         .container {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(25px);
@@ -24,30 +26,53 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 25px;
-            width: 95%; max-width: 480px;
+            width: 95%; max-width: 500px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
+
         .nav-tabs { display: flex; background: rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 25px; padding: 5px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: rgba(255,255,255,0.5); cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 0.9rem; }
+        
+        .tab-btn { 
+            flex: 1; padding: 12px; border: none; background: none; 
+            color: rgba(255,255,255,0.5); cursor: pointer; font-weight: bold; 
+            transition: 0.3s; font-size: 0.9rem; 
+        }
+        
         .tab-btn.active { background: #00d2ff; color: #000; border-radius: 10px; }
         
         .slider-wrapper { display: flex; width: 300%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         .section { width: 33.3333%; padding: 0 10px; }
 
+        /* Đồng hồ */
         .time-main { font-size: 3.8rem; font-weight: 800; margin: 15px 0; color: #00d2ff; text-shadow: 0 0 20px rgba(0,210,255,0.4); }
         .date-main { font-size: 1.4rem; margin-bottom: 10px; letter-spacing: 1px; }
         .lunar-date { font-size: 1.1rem; color: #ffd700; background: rgba(255,215,0,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; }
 
         select {
             width: 100%; padding: 12px; margin-bottom: 25px;
-            border-radius: 12px; background: rgba(255,255,255,0.05);
+            border-radius: 12px; background: rgba(0, 0, 0, 0.5);
             color: #fff; border: 1px solid rgba(255,255,255,0.2);
             font-size: 0.85rem; outline: none;
         }
+
+        /* Bấm giờ & Hẹn giờ */
         .display-box { font-size: 2.8rem; margin: 25px 0; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; font-family: monospace; }
-        .action-btn { padding: 14px 24px; border-radius: 15px; border: none; background: #00d2ff; color: #000; font-weight: bold; margin: 8px; font-size: 1rem; cursor: pointer; }
+        
+        .action-btn { 
+            padding: 14px 24px; border-radius: 15px; border: none; 
+            background: #00d2ff; color: #000; font-weight: bold; 
+            margin: 8px; font-size: 1rem; cursor: pointer; 
+        }
+        
         .action-btn:active { transform: scale(0.95); }
+
+        .lap-list {
+            list-style: none; max-height: 120px; overflow-y: auto;
+            margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px;
+        }
+        .lap-list li { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 5px 0; display: flex; justify-content: space-between; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -68,53 +93,56 @@
         </div>
 
         <div class="section">
-            <div class="display-box" id="sw-display">00:00:00</div>
-            <button class="action-btn" id="sw-start" style="background: #00ff88;">Bắt đầu</button>
-            <button class="action-btn" id="sw-reset" style="background: #ff4444; color: #fff;">Xóa</button>
+            <div class="display-box" id="sw-display">00:00:00.00</div>
+            <div style="display: flex; justify-content: center;">
+                <button class="action-btn" id="sw-start" style="background: #00ff88;">Bắt đầu</button>
+                <button class="action-btn" id="sw-lap" style="background: #ffd700;">Vòng</button>
+                <button class="action-btn" id="sw-reset" style="background: #ff4444; color: #fff;">Xóa</button>
+            </div>
+            <ul class="lap-list" id="lap-list"></ul>
         </div>
 
         <div class="section">
             <div class="display-box" id="tm-display">00:00:00</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px;">
                 <button class="action-btn" onclick="addTime(60)">+1 Phút</button>
                 <button class="action-btn" onclick="addTime(300)">+5 Phút</button>
             </div>
-            <button class="action-btn" id="tm-start" style="width: 80%; background: #ffd700;">Bắt đầu / Tạm dừng</button>
-            <button class="action-btn" onclick="resetTimer()" style="background: #ff4444; color: #fff;">Xóa</button>
+            <button class="action-btn" id="tm-start" style="width: 85%; background: #00d2ff;">Bắt đầu / Tạm dừng</button>
+            <button class="action-btn" onclick="resetTimer()" style="background: #ff4444; color: #fff;">Xóa hết</button>
         </div>
     </div>
 </div>
 
 <script>
+    // --- KHỞI TẠO MÚI GIỜ SIÊU CHI TIẾT ---
     const tzSelect = document.getElementById('tz-select');
-    
-    // DANH SÁCH MÚI GIỜ CHI TIẾT (ÍT NHẤT 3 ĐỊA DANH)
     const timeZones = [
-        { n: "UTC-12: Baker, Howland, Phoenix Is.", v: "Etc/GMT+12" },
-        { n: "UTC-11: Samoa, Niue, Midway Atoll", v: "Pacific/Pago_Pago" },
-        { n: "UTC-10: Hawaii, Tahiti, Cook Islands", v: "Pacific/Honolulu" },
-        { n: "UTC-09: Alaska, Gambier, Anchorage", v: "America/Anchorage" },
-        { n: "UTC-08: Los Angeles, Vancouver, Tijuana", v: "America/Los_Angeles" },
-        { n: "UTC-07: Denver, Edmonton, Phoenix", v: "America/Denver" },
-        { n: "UTC-06: Mexico City, Chicago, Guatemala", v: "America/Mexico_City" },
-        { n: "UTC-05: New York, Toronto, Havana", v: "America/New_York" },
-        { n: "UTC-04: Santiago, Manaus, Halifax", v: "America/Santiago" },
-        { n: "UTC-03: Sao Paulo, Buenos Aires, Greenland", v: "America/Sao_Paulo" },
-        { n: "UTC-02: South Georgia, Sandwich Is.", v: "Etc/GMT+2" },
+        { n: "UTC-12: Baker Island, Howland Island, Phoenix Is.", v: "Etc/GMT+12" },
+        { n: "UTC-11: Samoa, Niue, Midway Atoll, Pago Pago", v: "Pacific/Pago_Pago" },
+        { n: "UTC-10: Hawaii, Tahiti, Cook Islands, Honolulu", v: "Pacific/Honolulu" },
+        { n: "UTC-09: Alaska, Gambier Islands, Anchorage", v: "America/Anchorage" },
+        { n: "UTC-08: Los Angeles, Vancouver, Tijuana, Seattle", v: "America/Los_Angeles" },
+        { n: "UTC-07: Denver, Edmonton, Phoenix, Calgary", v: "America/Denver" },
+        { n: "UTC-06: Mexico City, Chicago, Guatemala, Regina", v: "America/Mexico_City" },
+        { n: "UTC-05: New York, Toronto, Havana, Bogota, Lima", v: "America/New_York" },
+        { n: "UTC-04: Santiago, Manaus, Halifax, Santo Domingo", v: "America/Santiago" },
+        { n: "UTC-03: Sao Paulo, Buenos Aires, Greenland, Montevideo", v: "America/Sao_Paulo" },
+        { n: "UTC-02: South Georgia, South Sandwich Islands", v: "Etc/GMT+2" },
         { n: "UTC-01: Azores, Cape Verde, Ittoqqortoormiit", v: "Atlantic/Azores" },
-        { n: "UTC+00: London, Dublin, Lisbon, Casablanca", v: "Europe/London" },
-        { n: "UTC+01: Paris, Berlin, Rome, Madrid", v: "Europe/Paris" },
-        { n: "UTC+02: Cairo, Athens, Johannesburg, Kyiv", v: "Africa/Cairo" },
-        { n: "UTC+03: Moscow, Riyadh, Nairobi, Baghdad", v: "Europe/Moscow" },
-        { n: "UTC+04: Dubai, Baku, Tbilisi, Mauritius", v: "Asia/Dubai" },
-        { n: "UTC+05: Karachi, Tashkent, Maldives", v: "Asia/Karachi" },
-        { n: "UTC+06: Dhaka, Almaty, Omsk, Thimphu", v: "Asia/Dhaka" },
-        { n: "UTC+07: Hà Nội, TP.HCM, Bangkok, Jakarta", v: "Asia/Ho_Chi_Minh" },
-        { n: "UTC+08: Singapore, Bắc Kinh, Perth, Manila", v: "Asia/Singapore" },
-        { n: "UTC+09: Tokyo, Seoul, Osaka, Pyongyang", v: "Asia/Tokyo" },
-        { n: "UTC+10: Sydney, Melbourne, Brisbane, Guam", v: "Australia/Sydney" },
-        { n: "UTC+11: Noumea, Solomon Is., Vanuatu", v: "Pacific/Noumea" },
-        { n: "UTC+12: Auckland, Fiji, Petropavlovsk", v: "Pacific/Auckland" }
+        { n: "UTC+00: London, Dublin, Lisbon, Casablanca, Accra", v: "Europe/London" },
+        { n: "UTC+01: Paris, Berlin, Rome, Madrid, Warsaw, Lagos", v: "Europe/Paris" },
+        { n: "UTC+02: Cairo, Athens, Johannesburg, Kyiv, Jerusalem", v: "Africa/Cairo" },
+        { n: "UTC+03: Moscow, Riyadh, Nairobi, Baghdad, Istanbul", v: "Europe/Moscow" },
+        { n: "UTC+04: Dubai, Baku, Tbilisi, Mauritius, Yerevan", v: "Asia/Dubai" },
+        { n: "UTC+05: Karachi, Tashkent, Maldives, Islamabad", v: "Asia/Karachi" },
+        { n: "UTC+06: Dhaka, Almaty, Omsk, Thimphu, Bishkek", v: "Asia/Dhaka" },
+        { n: "UTC+07: Hà Nội, TP.Hồ Chí Minh, Bangkok, Jakarta", v: "Asia/Ho_Chi_Minh" },
+        { n: "UTC+08: Singapore, Bắc Kinh, Perth, Manila, Đài Bắc", v: "Asia/Singapore" },
+        { n: "UTC+09: Tokyo, Seoul, Osaka, Pyongyang, Yakutsk", v: "Asia/Tokyo" },
+        { n: "UTC+10: Sydney, Melbourne, Brisbane, Guam, Vladivostok", v: "Australia/Sydney" },
+        { n: "UTC+11: Noumea, Solomon Is., Vanuatu, Magadan", v: "Pacific/Noumea" },
+        { n: "UTC+12: Auckland, Fiji, Petropavlovsk, Marshall Is.", v: "Pacific/Auckland" }
     ];
 
     timeZones.forEach(tz => {
@@ -124,50 +152,102 @@
         tzSelect.appendChild(opt);
     });
 
+    // --- ĐỒNG HỒ ---
     function updateClock() {
         const tz = tzSelect.value;
         const now = new Date();
+        
+        // Giờ
         document.getElementById('current-time').textContent = new Intl.DateTimeFormat('vi-VN', {
             timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
         }).format(now);
 
-        const p = new Intl.DateTimeFormat('vi-VN', { timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric' }).formatToParts(now);
-        document.getElementById('solar-date').textContent = `${p.find(x=>x.type==='day').value}/${p.find(x=>x.type==='month').value}/${p.find(x=>x.type==='year').value}`;
+        // Ngày dd/mm/yyyy
+        const parts = new Intl.DateTimeFormat('vi-VN', { 
+            timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric' 
+        }).formatToParts(now);
+        const d = parts.find(p => p.type === 'day').value;
+        const m = parts.find(p => p.type === 'month').value;
+        const y = parts.find(p => p.type === 'year').value;
+        document.getElementById('solar-date').textContent = `${d}/${m}/${y}`;
 
-        const lunar = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { timeZone: tz, day: '2-digit', month: '2-digit' }).format(now);
+        // Âm lịch
+        const lunar = new Intl.DateTimeFormat('vi-VN-u-ca-chinese', { 
+            timeZone: tz, day: '2-digit', month: '2-digit' 
+        }).format(now);
         document.getElementById('lunar-date').textContent = `Âm lịch: Ngày ${lunar.replace('/', ' tháng ')}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
 
+    // --- CHUYỂN TAB ---
     function switchTab(i) {
         document.getElementById('slider').style.transform = `translateX(-${i * 33.3333}%)`;
         const btns = document.querySelectorAll('.tab-btn');
         btns.forEach((b, idx) => b.classList.toggle('active', idx === i));
     }
 
+    // --- BẤM GIỜ ---
     let swTime = 0, swInt, isSw = false;
-    document.getElementById('sw-start').onclick = function() {
-        if(!isSw) { isSw = true; this.textContent = "Dừng"; swInt = setInterval(() => { swTime++; document.getElementById('sw-display').textContent = new Date(swTime * 1000).toISOString().substr(11, 8); }, 1000); }
-        else { isSw = false; this.textContent = "Tiếp tục"; clearInterval(swInt); }
-    };
-    document.getElementById('sw-reset').onclick = () => { clearInterval(swInt); swTime = 0; document.getElementById('sw-display').textContent = "00:00:00"; isSw = false; document.getElementById('sw-start').textContent = "Bắt đầu"; };
+    function formatSW(ms) {
+        let h = Math.floor(ms / 360000);
+        let m = Math.floor((ms % 360000) / 6000);
+        let s = Math.floor((ms % 6000) / 100);
+        let c = ms % 100;
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`;
+    }
 
+    document.getElementById('sw-start').onclick = function() {
+        if(!isSw) {
+            isSw = true; this.textContent = "Dừng"; this.style.background = "#ffaa00";
+            swInt = setInterval(() => { swTime++; document.getElementById('sw-display').textContent = formatSW(swTime); }, 10);
+        } else {
+            isSw = false; this.textContent = "Tiếp tục"; this.style.background = "#00ff88";
+            clearInterval(swInt);
+        }
+    };
+
+    document.getElementById('sw-lap').onclick = () => {
+        if(isSw) {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>Vòng ${document.getElementById('lap-list').children.length + 1}</span> <span>${formatSW(swTime)}</span>`;
+            document.getElementById('lap-list').prepend(li);
+        }
+    };
+
+    document.getElementById('sw-reset').onclick = () => {
+        clearInterval(swInt); swTime = 0; isSw = false;
+        document.getElementById('sw-display').textContent = "00:00:00.00";
+        document.getElementById('sw-start').textContent = "Bắt đầu";
+        document.getElementById('sw-start').style.background = "#00ff88";
+        document.getElementById('lap-list').innerHTML = '';
+    };
+
+    // --- HẸN GIỜ ---
     let tmLeft = 0, tmInt, isTm = false;
-    window.addTime = (s) => { tmLeft += s; document.getElementById('tm-display').textContent = new Date(tmLeft * 1000).toISOString().substr(11, 8); };
+    function formatTM(s) {
+        let h = Math.floor(s / 3600);
+        let m = Math.floor((s % 3600) / 60);
+        let sec = s % 60;
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    }
+
+    window.addTime = (s) => { tmLeft += s; document.getElementById('tm-display').textContent = formatTM(tmLeft); };
+
     document.getElementById('tm-start').onclick = function() {
         if(tmLeft <= 0) return;
         if(!isTm) {
             isTm = true;
             tmInt = setInterval(() => {
                 tmLeft--;
-                document.getElementById('tm-display').textContent = new Date(tmLeft * 1000).toISOString().substr(11, 8);
+                document.getElementById('tm-display').textContent = formatTM(tmLeft);
                 if(tmLeft <= 0) { clearInterval(tmInt); isTm = false; alert("Hết giờ!"); }
             }, 1000);
         } else {
             isTm = false; clearInterval(tmInt);
         }
     };
+
     window.resetTimer = () => { clearInterval(tmInt); tmLeft = 0; isTm = false; document.getElementById('tm-display').textContent = "00:00:00"; };
 </script>
 </body>
